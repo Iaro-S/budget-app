@@ -1,5 +1,6 @@
 package ro.fastttrackit.curs20.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ro.fastttrackit.curs20.entity.Transaction;
 import ro.fastttrackit.curs20.entity.Type;
@@ -18,12 +19,8 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<Transaction> getFilteredList(@RequestParam(required = false) String product,
-                                             @RequestParam(required = false) Type type,
-                                             @RequestParam(required = false) Double minAmount,
-                                             @RequestParam(required = false) Double maxAmount
-    ) {
-        return transactionService.findAll(product, type, minAmount, maxAmount);
+    public List<Transaction> getAll() {
+        return transactionService.getAll();
     }
 
     @GetMapping("/{id}")
@@ -37,7 +34,14 @@ public class TransactionController {
     }
 
     @PutMapping("{transactionId}")
-    Optional<Transaction> updateTransaction(@PathVariable Integer transactionId, Transaction newTransaction) {
+    public Optional<Transaction> replaceTransaction(@PathVariable Integer transactionId,
+                                                    @RequestBody Transaction newTransaction) {
+        return transactionService.replace(transactionId, newTransaction);
+    }
+
+    @PatchMapping("{transactionId}")
+    public Transaction updateTransaction(@PathVariable Integer transactionId,
+                                         @RequestBody Transaction newTransaction) {
         return transactionService.update(transactionId, newTransaction);
     }
 

@@ -2,9 +2,9 @@ package ro.fastttrackit.curs20.service;
 
 import org.springframework.stereotype.Service;
 import ro.fastttrackit.curs20.entity.Transaction;
-import ro.fastttrackit.curs20.entity.Type;
 import ro.fastttrackit.curs20.repository.TransactionRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public List<Transaction> findAll(String product, Type type, Double minAmount, Double maxAmount) {
+    public List<Transaction> getAll() {
         return transactionRepository.findAll();
     }
 
@@ -29,20 +29,38 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    public Optional<Transaction> delete(Integer transactionId) {
-        Optional<Transaction> optionalTransaction = getById(transactionId);
-        if (optionalTransaction.isPresent()) {
-            transactionRepository.deleteById(transactionId);
+    public void delete(Integer transactionId) {
+        boolean exist = transactionRepository.existsById(transactionId);
+        if (!exist) {
+            throw new IllegalStateException("Transaction with id: " + transactionId + " does not exist");
         }
-        return optionalTransaction;
+        transactionRepository.deleteById(transactionId);
     }
 
-    public Optional<Transaction> update(Integer transactionId, Transaction newTransaction) {
-        Optional<Transaction> replacedTransaction = delete(transactionId);
+    public Optional<Transaction> replace(Integer transactionId, Transaction newTransaction) {
+        Optional<Transaction> replacedTransaction = transactionRepository.findById(transactionId);
         if (replacedTransaction.isPresent()) {
+            transactionRepository.deleteById(transactionId);
             newTransaction.setId(transactionId);
             transactionRepository.save(newTransaction);
         }
         return replacedTransaction;
+    }
+
+    public Transaction update(Integer transactionId, Transaction newTransaction) {
+        Optional<Transaction> existingTransaction = transactionRepository.findById(transactionId);
+
+        if (existingTransaction.isEmpty()) {
+            throw new EntityNotFoundException("Transaction not found");
+        }
+
+        Transaction result = existingTransaction.get();
+        result.setId(result.getId());
+        result.setProduct(newTransaction.getProduct() != null ? newTransaction.getProduct() : result.getProduct());
+        result.setType(result.getType());
+        result.setAmount(newTransaction.getAmount() != 0 ? newTransaction.getAmount() : result.getAmount());
+
+        return transactionRepository.save(result);
+
     }
 }
