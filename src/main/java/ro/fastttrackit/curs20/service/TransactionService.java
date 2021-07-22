@@ -50,8 +50,8 @@ public class TransactionService {
     public Transaction update(Integer transactionId, Transaction newTransaction) {
         Optional<Transaction> existingTransaction = transactionRepository.findById(transactionId);
 
-        if (existingTransaction.isEmpty()) {
-            throw new EntityNotFoundException("Transaction not found");
+        if (!existingTransaction.isPresent()) {
+            throw new IllegalStateException("Transaction not found");
         }
 
         Transaction result = existingTransaction.get();
