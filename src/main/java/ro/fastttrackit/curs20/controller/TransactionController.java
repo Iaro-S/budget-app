@@ -1,9 +1,7 @@
 package ro.fastttrackit.curs20.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ro.fastttrackit.curs20.entity.Transaction;
-import ro.fastttrackit.curs20.entity.Type;
 import ro.fastttrackit.curs20.service.TransactionService;
 
 import java.util.List;
