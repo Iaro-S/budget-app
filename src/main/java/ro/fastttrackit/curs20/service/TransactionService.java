@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import ro.fastttrackit.curs20.entity.Transaction;
 import ro.fastttrackit.curs20.repository.TransactionRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
