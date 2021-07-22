@@ -6,22 +6,13 @@ import ro.fastttrackit.curs20.entity.Type;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
 
     List<Transaction> findByType(Type type);
-
-    List<Transaction> findByMinAmount(double minAmount);
-
-    List<Transaction> findByMaxAmount(double maxAmount);
-
-    List<Transaction> findByTypeAndMin(Type type, double minAmount);
-
-    List<Transaction> findByTypeAndMax(Type type, double maxAmount);
-
-    List<Transaction> findByMinAndMax(double minAmount, double maxAmount);
-
-    List<Transaction> findByTypeAndMinAndMax(Type type, double minAmount, double maxAmount);
-
-
+    List<Transaction> findByAmountGreaterThan(Double minAmount);
+    List<Transaction> findByTypeAndAmountGreaterThan(Type type, double minAmount);
+    List<Transaction> findByTypeAndAmountGreaterThanAndAmountLessThan(Type type, Double minAmount, Double maxAmount);
+    List<Transaction> findByAmountLessThan(double minAmount);
+    List<Transaction> findByTypeAndAmountLessThan(Type type, Double minAmount);
+    List<Transaction> AmountGreaterThanAndAmountLessThan(Double minAmount, Double maxAmount);
 }

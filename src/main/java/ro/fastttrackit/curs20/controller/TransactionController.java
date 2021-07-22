@@ -2,6 +2,7 @@ package ro.fastttrackit.curs20.controller;
 
 import org.springframework.web.bind.annotation.*;
 import ro.fastttrackit.curs20.entity.Transaction;
+import ro.fastttrackit.curs20.entity.Type;
 import ro.fastttrackit.curs20.service.TransactionService;
 
 import java.util.List;
@@ -17,8 +18,10 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<Transaction> getAll() {
-        return transactionService.getAll();
+    public List<Transaction> getAll(@RequestParam(required = false) Type type,
+                                    @RequestParam(required = false) Double minAmount,
+                                    @RequestParam(required = false) Double maxAmount) {
+        return transactionService.getAll(type, minAmount, maxAmount);
     }
 
     @GetMapping("/{id}")

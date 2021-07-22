@@ -2,6 +2,7 @@ package ro.fastttrackit.curs20.service;
 
 import org.springframework.stereotype.Service;
 import ro.fastttrackit.curs20.entity.Transaction;
+import ro.fastttrackit.curs20.entity.Type;
 import ro.fastttrackit.curs20.repository.TransactionRepository;
 
 import java.util.List;
@@ -15,8 +16,24 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public List<Transaction> getAll() {
-        return transactionRepository.findAll();
+    public List<Transaction> getAll(Type type, Double minAmount, Double maxAmount) {
+        if (type == null && minAmount == null && maxAmount == null) {
+            return transactionRepository.findAll();
+        } else if (type != null && minAmount == null && maxAmount == null) {
+            return transactionRepository.findByType(type);
+        } else if (type == null && minAmount != null && maxAmount == null) {
+            return transactionRepository.findByAmountGreaterThan(minAmount);
+        } else if (type == null && minAmount == null && maxAmount != null) {
+            return transactionRepository.findByAmountLessThan(maxAmount);
+        } else if (type != null && minAmount != null && maxAmount == null) {
+            return transactionRepository.findByTypeAndAmountGreaterThan(type, minAmount);
+        } else if (type != null && minAmount == null && maxAmount != null) {
+            return transactionRepository.findByTypeAndAmountLessThan(type, maxAmount);
+        } else if (type == null && minAmount != null && maxAmount != null) {
+            return transactionRepository.AmountGreaterThanAndAmountLessThan(minAmount, maxAmount);
+        } else {
+            return transactionRepository.findByTypeAndAmountGreaterThanAndAmountLessThan(type, minAmount, maxAmount);
+        }
     }
 
     public Optional<Transaction> getById(Integer id) {
